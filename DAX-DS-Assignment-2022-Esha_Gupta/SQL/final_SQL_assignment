@@ -1,0 +1,83 @@
+--TOPIC 1
+--Question 1
+--Considered xyz as Prague
+SELECT CustomerId, FirstName, LastName, City
+FROM customers
+WHERE FirstName LIKE 'N%' OR City = 'Prague';
+
+
+----Question 2
+--Considered x and z as 0.99 and 1 respectively
+SELECT TrackId, Name, Composer, UnitPrice
+FROM tracks
+WHERE UnitPrice BETWEEN 0.99 AND 1 AND Composer NOT LIKE '%T%';
+
+
+--TOPIC 2
+-- Question 1
+SELECT InvoiceDate, SUM(Total) AS 'Sum of Total Invoice Bill', AVG(Total) AS 'Avg of Total Invoice Bill'
+FROM invoices
+WHERE InvoiceDate BETWEEN date('2012-06-01') AND date('2012-06-30')
+GROUP BY InvoiceDate;
+
+
+--Question 2
+SELECT TrackId, COUNT(Quantity) AS 'Total Quantity' 
+FROM invoice_items 
+GROUP BY TrackId
+ORDER BY COUNT(Quantity) DESC;
+
+
+--TOPIC 3
+-- Question 1
+SELECT ArtistId, Name
+FROM artists
+WHERE ArtistId NOT IN (SELECT ArtistId
+                        FROM albums
+                        WHERE AlbumId IN (SELECT AlbumId
+                                            FROM tracks
+                                            WHERE TrackId IN (SELECT TrackId
+                                                                FROM playlist_track
+                                                                WHERE PlaylistId IN (SELECT PlaylistId
+                                                                                        FROM playlists
+                                                                                    
+                                                                                    )
+                                                            )
+                                        )
+                      
+                );
+
+
+
+SELECT TrackId, COUNT(Quantity) AS 'Total Quantity' 
+FROM invoice_items 
+GROUP BY TrackId
+ORDER BY COUNT(Quantity) DESC;
+
+
+--TOPIC 3
+-- Question 1
+SELECT ArtistId, Name
+FROM artists
+WHERE ArtistId NOT IN (SELECT ArtistId
+                        FROM albums
+                        WHERE AlbumId IN (SELECT AlbumId
+                                            FROM tracks
+                                            WHERE TrackId IN (SELECT TrackId
+                                                                FROM playlist_track
+                                                                                      
+                                                            )
+                                        )
+                      
+                );
+
+
+-- Question 2
+SELECT a.AlbumId, a.Title, COUNT(pt.PlaylistId) AS 'Playlist Count'
+FROM albums a
+INNER JOIN tracks t
+ON a.AlbumId = t.AlbumId
+INNER JOIN playlist_track pt
+ON t.TrackId = pt.TrackId
+GROUP BY a.AlbumId, a.Title
+HAVING COUNT(pt.PlaylistId) > 5
